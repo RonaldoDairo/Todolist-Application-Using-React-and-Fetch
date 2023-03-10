@@ -1,24 +1,49 @@
-import React from "react";
+import React, {  useState, useEffect } from "react";
 
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
+	const URL = 'https://assets.breatheco.de/apis/fake/todos/user/ssaddaada';
 
-//create your first component
+[{
+
+}]
+
 const Home = () => {
+
+	const [state, setState] = useState([]);
+	const [load, setLoad] = useState(false);
+
+	const getTodoList = async() => {
+		try{
+			setLoad(true);
+			const response = await fetch(URL, { method: "GET" });
+			const data = await response.json();
+			console.log(data);
+			setState(data);
+			setLoad(false);
+		}catch(err){
+				console.log('err')
+			}
+	}	
+	useEffect(async () => {
+		getTodoList();
+	},[]);
+
+	const addNewTask = async () => {
+		try{
+			console.log('click')
+			const data = [...state, {label : "una task mas", done: false}]
+			const res = await fetch(URL, {method: "PUT", body: JSON.stringify(data),headers:{"Content-Type": "application/json"}})
+			console.log(res);
+			getTodoList();
+		}catch(err){
+			console.log('ERROR',err)
+		}
+	}
 	return (
 		<div className="text-center">
-			<h1 className="text-center mt-5">Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working...
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
+			<h1>Hola</h1>
+			{load ? <div>...loading</div> : null}
+			{ state.length ? state.map((todo) => <div key={todo.label}> {todo.label}</div>) : 'no data'}
+			<button onClick={ addNewTask } >Add new task</button>
 		</div>
 	);
 };
