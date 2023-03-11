@@ -2,10 +2,6 @@ import React, {  useState, useEffect } from "react";
 
 	const URL = 'https://assets.breatheco.de/apis/fake/todos/user/ssaddaada';
 
-[{
-
-}]
-
 const Home = () => {
 
 	const [state, setState] = useState([]);
@@ -31,19 +27,39 @@ const Home = () => {
 		try{
 			console.log('click')
 			const data = [...state, {label : "una task mas", done: false}]
-			const res = await fetch(URL, {method: "PUT", body: JSON.stringify(data),headers:{"Content-Type": "application/json"}})
+			const res = await fetch(URL, {method: "PUT", body: JSON.stringify(data),
+			headers:{"Content-Type": "application/json"}})
 			console.log(res);
 			getTodoList();
 		}catch(err){
 			console.log('ERROR',err)
 		}
 	}
+	function BTN(e) {
+        setState(e.target.value)
+        
+    }
+	function PrintToDo(e) {
+        const minLength =3
+        if(e.key === "Enter"  && state.length >= minLength){
+            setLoad(load.concat([state]));
+            setState("");
+       }
+    }
 	return (
 		<div className="text-center">
 			<h1>Hola</h1>
 			{load ? <div>...loading</div> : null}
-			{ state.length ? state.map((todo) => <div key={todo.label}> {todo.label}</div>) : 'no data'}
+			<input type="text"
+			onChange={BTN}
+			onKeyPress={PrintToDo}
+			value={state} 
+			placeholder="What you needs to be done?"
+			
+			/>
+			{/* { state.length ? state.map((todo) => <div key={todo.label}> {todo.label}</div>) : setState} */}
 			<button onClick={ addNewTask } >Add new task</button>
+			
 		</div>
 	);
 };
