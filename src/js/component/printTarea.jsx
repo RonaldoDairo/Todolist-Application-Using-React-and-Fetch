@@ -10,6 +10,7 @@ export const Send = () => {
 
 	const getTodoList = async() => {
 		try{
+            setLoad(true)
 			const response = await fetch(URL, { method: "GET" });
 			const data = await response.json();
 			console.log("esto es la data de getTOdoList",data);
@@ -25,11 +26,13 @@ export const Send = () => {
 
 	const addNewTask = async () => {
 		try{
+            setLoad(true)
 			const data = [...state,{label : aggTask , done : false}]
 			const res = await fetch(URL, {method: "PUT", body: JSON.stringify(data),
 			headers:{"Content-Type": "application/json"}})
 			console.log(res);
 			getTodoList();
+            setLoad(false)
 		}catch(err){
 			console.log("err")
 		}
@@ -40,11 +43,12 @@ export const Send = () => {
 					
 					return index
 			});
+            setLoad(true)
 			const res = await fetch(URL, {method: "PUT", body: JSON.stringify(stat),
 			headers: HEADER})
 			console.log(res);
 			getTodoList();
-			setLoad(true)
+			setLoad(false)
 		}catch(err){
 			console.log("err")
 		}	
